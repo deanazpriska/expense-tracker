@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense & Budget Visualizer</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <div class="app-wrapper">
+
+    <!-- Header -->
+    <header class="app-header">
+      <h1>💸 Budget Tracker</h1>
+      <p class="subtitle">Track your spending, stay on top of your budget</p>
+    </header>
+
+    <!-- Balance Card -->
+    <section class="balance-card" aria-label="Total balance">
+      <div class="balance-info">
+        <span class="balance-label">Total Spent</span>
+        <span class="balance-amount" id="totalBalance">$0.00</span>
+      </div>
+      <div class="balance-meta">
+        <span id="txCount">0 transactions</span>
+        <span id="catCount">0 categories</span>
+      </div>
+    </section>
+
+    <!-- Input Form -->
+    <section class="card form-card">
+      <h2 class="card-title">Add Transaction</h2>
+      <form id="transactionForm" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="itemName">Item Name</label>
+            <input type="text" id="itemName" placeholder="e.g. Coffee" maxlength="60" autocomplete="off" />
+            <span class="field-error" id="nameError"></span>
+          </div>
+          <div class="form-group">
+            <label for="amount">Amount ($)</label>
+            <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" />
+            <span class="field-error" id="amountError"></span>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category">
+              <option value="">Select category…</option>
+              <option value="Food">🍔 Food</option>
+              <option value="Transport">🚌 Transport</option>
+              <option value="Fun">🎉 Fun</option>
+              <optgroup id="customOptGroup" label="Custom"></optgroup>
+              <option value="__new__">＋ New category…</option>
+            </select>
+            <span class="field-error" id="categoryError"></span>
+          </div>
+          <div class="form-group">
+            <label for="txDate">Date</label>
+            <input type="date" id="txDate" />
+            <span class="field-error" id="dateError"></span>
+          </div>
+        </div>
+        <!-- Custom category input (hidden by default) -->
+        <div class="form-group" id="customCatGroup" style="display:none;">
+          <label for="customCatInput">New Category Name</label>
+          <div class="custom-cat-row">
+            <input type="text" id="customCatInput" placeholder="e.g. Health" maxlength="30" />
+            <button type="button" id="saveCatBtn" class="btn btn-secondary">Save</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">＋ Add Transaction</button>
+      </form>
+    </section>
+
+    <!-- Chart & Summary -->
+    <section class="card chart-card">
+      <div class="chart-header">
+        <h2 class="card-title">Spending by Category</h2>
+        <div class="chart-controls">
+          <select id="chartType" aria-label="Chart type">
+            <option value="pie">Pie</option>
+            <option value="doughnut">Doughnut</option>
+            <option value="bar">Bar</option>
+          </select>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="spendingChart" aria-label="Spending chart"></canvas>
+        <p class="chart-empty" id="chartEmpty">Add transactions to see your chart</p>
+      </div>
+    </section>
+
+    <!-- Monthly Summary -->
+    <section class="card monthly-card">
+      <div class="monthly-header">
+        <h2 class="card-title">Monthly Summary</h2>
+        <input type="month" id="monthPicker" aria-label="Pick month" />
+      </div>
+      <div id="monthlySummary" class="monthly-summary">
+        <p class="empty-state">No data for this month</p>
+      </div>
+    </section>
+
+    <!-- Transaction List -->
+    <section class="card list-card">
+      <div class="list-header">
+        <h2 class="card-title">Transactions</h2>
+        <div class="list-controls">
+          <select id="sortSelect" aria-label="Sort transactions">
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="highest">Highest $</option>
+            <option value="lowest">Lowest $</option>
+            <option value="category">Category</option>
+          </select>
+        </div>
+      </div>
+      <!-- Filter chips -->
+      <div class="filter-chips" id="filterChips" role="group" aria-label="Filter by category">
+        <button class="chip active" data-filter="all">All</button>
+      </div>
+      <ul class="tx-list" id="transactionList" aria-label="Transaction list">
+        <li class="empty-state" id="emptyState">No transactions yet. Add one above!</li>
+      </ul>
+    </section>
+
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
